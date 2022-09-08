@@ -4,7 +4,7 @@
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
 {
-    std::cout << "Example project" << std::endl;
+    logging::info("Example {}", "project");
 
     return 0;
 }
