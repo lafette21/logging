@@ -9,7 +9,9 @@ set(CMAKE_CXX_STANDARD 20)
 # when compiling with PCH enabled
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_BUILD_TYPE Release)
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 # Set the project name and language
 project(logging

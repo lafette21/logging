@@ -27,7 +27,8 @@ if(CONAN_EXPORTED)
 
     conan_basic_setup()
 else()
-    conan_cmake_autodetect(settings BUILD_TYPE ${CMAKE_BUILD_TYPE})
+    message("${CMAKE_BUILD_TYPE}")
+    conan_cmake_autodetect(settings BUILD_TYPE "${CMAKE_BUILD_TYPE}")
     set(CONAN_SETTINGS SETTINGS ${settings})
     set(CONAN_ENV ENV "CC=${CMAKE_C_COMPILER}" "CXX=${CMAKE_CXX_COMPILER}")
 
