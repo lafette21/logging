@@ -3,6 +3,7 @@
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/syslog_sink.h>
 
@@ -10,20 +11,21 @@ namespace logging
 {
     enum class Level
     {
-        TRACE,
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR,
-        CRITICAL,
-        OFF
+        Trace,
+        Debug,
+        Info,
+        Warn,
+        Error,
+        Critical,
+        Off
     };
 
     enum class Sink
     {
-        FILE,
-        STDOUT,
-        SYSLOG
+        File,
+        Null,
+        Stdout,
+        Syslog
     };
 
     class Logger
@@ -57,13 +59,16 @@ namespace logging
         {
             switch (elem)
             {
-                case Sink::FILE:
+                case Sink::File:
                     logger.sinks().push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("path"));
                     break;
-                case Sink::STDOUT:
+                case Sink::Null:
+                    logger.sinks().push_back(std::make_shared<spdlog::sinks::null_sink_mt>());
+                    break;
+                case Sink::Stdout:
                     logger.sinks().push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
                     break;
-                case Sink::SYSLOG:
+                case Sink::Syslog:
                     logger.sinks().push_back(std::make_shared<spdlog::sinks::syslog_sink_mt>("test-log", LOG_PID, LOG_USER, false));
                     break;
                 default:
@@ -111,25 +116,25 @@ namespace logging
     {
         switch (level)
         {
-            case Level::TRACE:
+            case Level::Trace:
                 Logger::get().set_level(spdlog::level::trace);
                 break;
-            case Level::DEBUG:
+            case Level::Debug:
                 Logger::get().set_level(spdlog::level::debug);
                 break;
-            case Level::INFO:
+            case Level::Info:
                 Logger::get().set_level(spdlog::level::info);
                 break;
-            case Level::WARN:
+            case Level::Warn:
                 Logger::get().set_level(spdlog::level::warn);
                 break;
-            case Level::ERROR:
+            case Level::Error:
                 Logger::get().set_level(spdlog::level::err);
                 break;
-            case Level::CRITICAL:
+            case Level::Critical:
                 Logger::get().set_level(spdlog::level::critical);
                 break;
-            case Level::OFF:
+            case Level::Off:
                 Logger::get().set_level(spdlog::level::off);
                 break;
             default:

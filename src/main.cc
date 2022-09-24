@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "logging.hh"
+#include "logging/logging.hh"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
 {
     // Experimental
     logging::init("example");
 
-    logging::addSinks(std::vector<logging::Sink>{logging::Sink::STDOUT, logging::Sink::FILE, logging::Sink::SYSLOG});
+    logging::addSinks(std::vector<logging::Sink>{logging::Sink::Stdout, logging::Sink::File, logging::Sink::Syslog});
 
     logging::info("Example project");
     logging::error("Error message with arg: {}", 1);
@@ -18,7 +18,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
     logging::info("{:<30}", "left aligned");
 
     // Set global log level to debug
-    logging::setLevel(logging::Level::DEBUG);
+    logging::setLevel(logging::Level::Debug);
     logging::debug("This message should be displayed...");
 
     // Change log pattern

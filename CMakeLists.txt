@@ -1,21 +1,8 @@
 cmake_minimum_required(VERSION 3.16...3.23)
 
-# Not ideal to use this global variable, but necessary to make sure
-# that tooling and projects use the same version
-set(CMAKE_CXX_STANDARD 20)
-
-# Strongly encouraged to enable this globally to avoid conflicts between
-# -Wpedantic being enabled and -std=c++20 and -std=gnu++20 for example
-# when compiling with PCH enabled
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-if(NOT DEFINED CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
 # Set the project name and language
 project(logging
-    VERSION 0.0.1
+    VERSION 0.1.0
     DESCRIPTION "C++ logging wrapper library."
     HOMEPAGE_URL "https://github.com/laFette21/logging"
     LANGUAGES CXX C
@@ -27,8 +14,6 @@ include(cmake/compilerWarnings.cmake)
 include(cmake/conanConfig.cmake)
 
 run_conan()
-
-find_package(spdlog REQUIRED)
 
 # Enable project warnings
 add_library(project_warnings INTERFACE)
