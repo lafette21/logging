@@ -1,5 +1,7 @@
 set(EXEC_NAME example)
 
+include_directories(${CMAKE_HOME_DIRECTORY}/include)
+
 add_executable(${EXEC_NAME}
     main.cc
 )
