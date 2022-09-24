@@ -6,5 +6,5 @@ add_executable(${EXEC_NAME}
 
 target_link_libraries(${EXEC_NAME}
     project_warnings
-    spdlog::spdlog
+    ${CONAN_LIBS}
 )

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "logging.hh"
+#include "logging/logging.hh"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
 {
