@@ -20,13 +20,15 @@ namespace logging
         Off
     };
 
-    enum class Sink
-    {
-        File,
-        Null,
-        Stdout,
-        Syslog
-    };
+    struct File {};
+    struct Null {};
+    struct Stdout {};
+    struct Syslog {};
+
+    template<typename T>
+    concept no_param = std::is_same_v<T, Null> || std::is_same_v<T, Stdout>;
+    template<typename T>
+    concept param = std::is_same_v<T, File> || std::is_same_v<T, Syslog>;
 
     class unreachable : public std::exception
     {
@@ -60,29 +62,29 @@ namespace logging
         spdlog::logger _logger;
     };
 
-    inline void addSinks(const std::vector<Sink>& sinks)
+    template<no_param T>
+    inline void addSink()
     {
-        auto& logger = Logger::get();
-
-        for (const auto& elem : sinks)
+        if (typeid(T) == typeid(Null))
         {
-            switch (elem)
-            {
-                case Sink::File:
-                    logger.sinks().push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("path"));
-                    break;
-                case Sink::Null:
-                    logger.sinks().push_back(std::make_shared<spdlog::sinks::null_sink_mt>());
-                    break;
-                case Sink::Stdout:
-                    logger.sinks().push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-                    break;
-                case Sink::Syslog:
-                    logger.sinks().push_back(std::make_shared<spdlog::sinks::syslog_sink_mt>("test-log", LOG_PID, LOG_USER, false));
-                    break;
-                default:
-                    logger.critical("The requested logging sink does not exists.");
-            }
+            Logger::get().sinks().push_back(std::make_shared<spdlog::sinks::null_sink_mt>());
+        }
+        else if (typeid(T) == typeid(Stdout))
+        {
+            Logger::get().sinks().push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+        }
+    }
+
+    template<param T>
+    inline void addSink(const std::string& param)
+    {
+        if (typeid(T) == typeid(File))
+        {
+            Logger::get().sinks().push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(param));
+        }
+        else if (typeid(T) == typeid(Syslog))
+        {
+            Logger::get().sinks().push_back(std::make_shared<spdlog::sinks::syslog_sink_mt>(param, LOG_PID, LOG_USER, false));
         }
     }
 
@@ -147,7 +149,7 @@ namespace logging
                 Logger::get().set_level(spdlog::level::off);
                 break;
             default:
-                throw logging::unreachable();
+                throw unreachable();
         }
     }
 

@@ -4,10 +4,8 @@
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
 {
-    // Experimental
     logging::init("example");
-
-    logging::addSinks(std::vector<logging::Sink>{logging::Sink::Stdout, logging::Sink::File, logging::Sink::Syslog});
+    logging::addSink<logging::Stdout>();
 
     logging::info("Example project");
     logging::error("Error message with arg: {}", 1);
