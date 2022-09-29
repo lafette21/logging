@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16...3.23)
 
 # Set the project name and language
 project(logging
-    VERSION 0.1.0
+    VERSION 0.1.1
     DESCRIPTION "C++ logging wrapper library."
     HOMEPAGE_URL "https://github.com/laFette21/logging"
     LANGUAGES CXX C
