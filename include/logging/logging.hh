@@ -9,6 +9,9 @@
 
 namespace logging
 {
+    /**
+     * @brief Enum type for global logging level
+     */
     enum class Level
     {
         Trace,
@@ -20,11 +23,17 @@ namespace logging
         Off
     };
 
+    /**
+     * @brief Sink types for the global logger
+     */
     struct File {};
     struct Null {};
     struct Stdout {};
     struct Syslog {};
 
+    /**
+     * @brief Exception type for unreachable code branches
+     */
     class unreachable : public std::exception
     {
     public:
@@ -34,6 +43,9 @@ namespace logging
         }
     };
 
+    /**
+     * @brief Singleton-type facade for the 3PP logger library
+     */
     class Logger
     {
     public:
@@ -48,6 +60,13 @@ namespace logging
         Logger(const std::string& name): _logger(spdlog::logger{name}) {}
         ~Logger() = default;
 
+        /**
+         * @brief Create and/or return the singleton object's _logger instance for inner use only.
+         *
+         * @param init
+         *
+         * @return _logger
+         */
         static spdlog::logger& get(std::optional<std::string> const& init = std::nullopt)
         {
             static Logger instance{init.value()};
@@ -69,6 +88,13 @@ namespace logging
         spdlog::logger _logger;
     };
 
+    /**
+     * @brief Add a specific sink to the global logger
+     *
+     * @tparam T
+     * @tparam Args
+     * @param args
+     */
     template<typename T, typename... Args>
     inline void addSink(Args&&... args)
     {
@@ -118,6 +144,11 @@ namespace logging
         Logger::get().info(fmt, std::forward<Args>(args)...);
     }
 
+    /**
+     * @brief Initialize and register the global logger
+     *
+     * @param name
+     */
     inline void init(const std::string& name)
     {
         Logger::get(name);
@@ -129,6 +160,11 @@ namespace logging
         Logger::get().warn(fmt, std::forward<Args>(args)...);
     }
 
+    /**
+     * @brief Set global logging level
+     *
+     * @param level
+     */
     inline void setLevel(const Level& level)
     {
         switch (level)
@@ -159,6 +195,11 @@ namespace logging
         }
     }
 
+    /**
+     * @brief Set global format string.
+     *
+     * @param pattern
+     */
     inline void setPattern(const std::string& pattern)
     {
         Logger::get().set_pattern(pattern);
