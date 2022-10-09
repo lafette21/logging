@@ -37,12 +37,6 @@ namespace logging
     class Logger
     {
     public:
-        static spdlog::logger& get(std::optional<std::string> const& init = std::nullopt)
-        {
-            static Logger instance{init.value()};
-            return instance._logger;
-        }
-
         constexpr Logger(const Logger&)   = delete;
         constexpr Logger(const Logger&&)  = delete;
 
@@ -53,6 +47,24 @@ namespace logging
         Logger()  = delete;
         Logger(const std::string& name): _logger(spdlog::logger{name}) {}
         ~Logger() = default;
+
+        static spdlog::logger& get(std::optional<std::string> const& init = std::nullopt)
+        {
+            static Logger instance{init.value()};
+            return instance._logger;
+        }
+
+        template<typename... Args> friend inline void critical(fmt::format_string<Args...>, Args&&...);
+        template<typename... Args> friend inline void debug(fmt::format_string<Args...>, Args&&...);
+        template<typename... Args> friend inline void error(fmt::format_string<Args...>, Args&&...);
+        template<typename... Args> friend inline void info(fmt::format_string<Args...>, Args&&...);
+        template<typename... Args> friend inline void warn(fmt::format_string<Args...>, Args&&...);
+
+        template<typename T, typename... Args> friend inline void addSink(Args&&...);
+
+        friend inline void init(const std::string&);
+        friend inline void setLevel(const Level&);
+        friend inline void setPattern(const std::string&);
 
         spdlog::logger _logger;
     };
@@ -83,25 +95,25 @@ namespace logging
     }
 
     template<typename... Args>
-    inline void critical(fmt::format_string<Args...> fmt, Args&& ...args)
+    inline void critical(fmt::format_string<Args...> fmt, Args&&... args)
     {
         Logger::get().critical(fmt, std::forward<Args>(args)...);
     }
 
     template<typename... Args>
-    inline void debug(fmt::format_string<Args...> fmt, Args&& ...args)
+    inline void debug(fmt::format_string<Args...> fmt, Args&&... args)
     {
         Logger::get().debug(fmt, std::forward<Args>(args)...);
     }
 
     template<typename... Args>
-    inline void error(fmt::format_string<Args...> fmt, Args&& ...args)
+    inline void error(fmt::format_string<Args...> fmt, Args&&... args)
     {
         Logger::get().error(fmt, std::forward<Args>(args)...);
     }
 
     template<typename... Args>
-    inline void info(fmt::format_string<Args...> fmt, Args&& ...args)
+    inline void info(fmt::format_string<Args...> fmt, Args&&... args)
     {
         Logger::get().info(fmt, std::forward<Args>(args)...);
     }
@@ -112,7 +124,7 @@ namespace logging
     }
 
     template<typename... Args>
-    inline void warn(fmt::format_string<Args...> fmt, Args&& ...args)
+    inline void warn(fmt::format_string<Args...> fmt, Args&&... args)
     {
         Logger::get().warn(fmt, std::forward<Args>(args)...);
     }

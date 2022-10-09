@@ -2,7 +2,7 @@ from conans import ConanFile
 
 class Logging(ConanFile):
     name = "logging"
-    version = "0.1.1"
+    version = "0.1.2"
     description = "C++ logging wrapper library."
     url = "https://github.com/laFette21/logging"
     exports_sources = "include/*"
